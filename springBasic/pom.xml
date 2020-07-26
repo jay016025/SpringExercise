@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>idv.jay</groupId>
+  <artifactId>springBasic</artifactId>
+  <packaging>war</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>springBasic Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+  	<!-- sourceCode 編碼設定 -->
+  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  	<!-- 編譯編碼設定 -->
+  	<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+  	<!-- maven輸出jar檔編碼設定 -->
+  	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  	<maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- spring start -->
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-core</artifactId>
+	    <version>5.2.6.RELEASE</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-context</artifactId>
+	    <version>5.2.6.RELEASE</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-beans</artifactId>
+	    <version>5.2.6.RELEASE</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-expression</artifactId>
+	    <version>5.2.6.RELEASE</version>
+	</dependency>
+	<!-- spring 預設使用此日誌框架 -->
+	<dependency>
+	    <groupId>commons-logging</groupId>
+	    <artifactId>commons-logging</artifactId>
+	    <version>1.2</version>
+	</dependency>
+	<!-- spring end -->
+	<!-- servlet start -->
+	<dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>javax.servlet-api</artifactId>
+	    <version>4.0.1</version>
+	    <scope>provided</scope>
+	</dependency>
+	<!-- servlet end -->
+  </dependencies>
+  <build>
+  	<plugins>
+  		<!-- Maven start -->
+	  	<plugin>
+	  		<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>${maven-compiler-plugin-version}</version>
+			<configuration>
+				<!-- maven-compiler-plugin 預設使用java1.6版本，所以想指定其他版本，可設定以下兩個property -->
+				<!-- source 可使用java1.8版本語法 -->
+				<source>1.8</source>
+				<!-- target 讓jre兼容java1.8版本執行 -->
+				<target>1.8</target>
+			</configuration>
+		</plugin>
+  	</plugins>
+    <finalName>springBasic</finalName>
+  </build>
+</project>
+
+<!-- 基本maven專案
+	maven內鍵變數 : sourceCode編碼設定、編譯編碼設定
+	maven-compiler-plugin : maven編譯插件設定
+	project.reporting.outputEncoding : maven輸出jar編碼設定
+	servlet api設定
+ -->
