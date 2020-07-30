@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+	
+	<!-- spring創建bean的技術用的是映射，所以必須要有無參數的建構子 -->
+	
+	<!-- <bean>: spring 以此標籤定義管理物件
+		id: 定義物件的唯一值，不可重複
+		class: 物件的類別全名
+	 -->
+	<bean id="firstBean" class="idv.jay.spring.model.Person">
+		<property name="id" value="1"/>
+		<property name="name" value="jay"/>
+	</bean>
+	
+	<bean id="s1" class="idv.jay.spring.model.Student">
+		<!-- spring賦值是看set方法的名稱進行注入 -->
+		<property name="id" value="1"/>
+		<property name="name" value="jay"/>
+		<property name="age" value="23"/>
+		<property name="sex" value="man"/>
+	</bean>
+	
+	<!-- 通過建構子賦值
+		constructor-arg:建構子參數
+		index:參數索引值，從0開始
+		type:可指定參數型別
+	 -->
+	<bean id="s2" class="idv.jay.spring.model.Student">
+		<constructor-arg value="2"/>
+		<constructor-arg value="tom"/>
+		<constructor-arg value="23"/>
+		<constructor-arg value="man"/>
+		<constructor-arg value="90" index="4" type="java.lang.Double"/>
+	</bean>
+	
+	<!-- 通過p namespace賦值
+		需要再xml標頭引入p namespace
+	 -->
+	<bean id="s3" class="idv.jay.spring.model.Student"
+		p:id="3" p:name="sam" p:age="34" p:sex="man" p:score="100"
+	/>
+	
+	
+	<!-- 不能用字面量表示
+		以ref引用spring管理的其他bean進行賦值
+	 -->
+	<bean id="t1" class="idv.jay.spring.model.Teacher"
+		p:id="1" p:tname="biil"
+	/>
+	<bean id="s4" class="idv.jay.spring.model.Student" 
+		p:teacher-ref="t1"
+	/>
+	
+	<!-- 通過級聯屬性賦值
+		需有其他可引用的bean
+	 -->
+	<bean id="s5" class="idv.jay.spring.model.Student">
+		<property name="teacher" ref="t1"/>
+		<property name="teacher.id" value="2"/>
+		<property name="teacher.tname" value="小名"/>
+	</bean>
+	
+	<!-- 使用內部bean賦值
+		內部bean只能在當前bean中使用，外部無法引用此內部bean
+	 -->
+	<bean id="s6" class="idv.jay.spring.model.Student">
+		<property name="teacher">
+			<bean class="idv.jay.spring.model.Teacher" p:id="2" p:tname="小紅"/>
+		</property>	
+	</bean>
+	
+	<!-- 幫list屬性賦值
+		字面量賦值
+	 -->
+	<bean id="t2" class="idv.jay.spring.model.Teacher">
+		<property name="id" value="3"/>
+		<property name="tname" value="小剛"/>
+		<property name="cls">
+			<list>
+				<value>A</value>
+				<value>B</value>
+				<value>C</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 非字面量可賦值
+		使用ref去引用其他bean，
+		也可使用內部bean方式
+		還可以使用<set><array>標籤等等
+	 -->
+	<bean id="t3" class="idv.jay.spring.model.Teacher">
+		<property name="id" value="3"/>
+		<property name="tname" value="小剛"/>
+		<property name="students">
+			<list>
+				<ref bean="s1"/>
+				<ref bean="s2"/>
+				<ref bean="s3"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id='t4' class='idv.jay.spring.model.Teacher'>
+		<property name="id" value="4"/>
+		<property name="tname" value="testMap"/>
+		<property name="bossMap">
+			<map>
+				<!-- 一個entry等於一組key/value -->
+				<entry>
+					<key>
+						<value>1001</value>
+					</key>
+					<value>松明</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="t5" class="idv.jay.spring.model.Teacher">
+		<property name="id" value="5"/>
+		<property name="tname" value="testUtil"/>
+		<property name="students" ref="students"/>
+	</bean>
+	
+	<!-- spring提供的工具標籤
+		一個<util:list>標籤等於一個list
+	 -->
+	<util:list id="students">
+		<ref bean="s1"/>
+		<ref bean="s2"/>
+		<ref bean="s3"/>
+	</util:list>
+	
+</beans>
