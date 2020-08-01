@@ -140,5 +140,6 @@
 	<!-- 工廠bean -->
 	<bean id="studentFactory" class="idv.jay.spring.factory.StudentFactory"/>
 		
-	
+	<!-- bean的生命週期 -->
+	<bean id="lifeCycle" class="idv.jay.lifeCycle.LifeCycle" init-method="init" destroy-method="destroy" p:di="屬性注入" />
 </beans>

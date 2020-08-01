@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import idv.jay.lifeCycle.LifeCycle;
 import idv.jay.spring.model.Person;
 import idv.jay.spring.model.Student;
 import idv.jay.spring.model.Teacher;
@@ -43,5 +44,13 @@ public class SpringIOCTest {
 		Object obj = context.getBean("studentFactory");
 		//工廠bean特點:這裡取得的物件應該為工廠，但是實際上為工廠所創建的物件
 		System.out.println(obj);
+	}
+	
+	@Test
+	public void testLifeCycle() {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		LifeCycle msg = context.getBean("lifeCycle", LifeCycle.class);
+		System.out.println(msg);
+		context.close();
 	}
 }
