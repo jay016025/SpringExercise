@@ -36,4 +36,12 @@ public class SpringIOCTest {
 		Teacher th = context.getBean("t5", Teacher.class);
 		System.out.println(th);
 	}
+	
+	@Test
+	public void testFactoryBean() {
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		Object obj = context.getBean("studentFactory");
+		//工廠bean特點:這裡取得的物件應該為工廠，但是實際上為工廠所創建的物件
+		System.out.println(obj);
+	}
 }

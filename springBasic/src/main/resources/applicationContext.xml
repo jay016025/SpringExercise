@@ -137,4 +137,8 @@
 		<ref bean="s3"/>
 	</util:list>
 	
+	<!-- 工廠bean -->
+	<bean id="studentFactory" class="idv.jay.spring.factory.StudentFactory"/>
+		
+	
 </beans>
