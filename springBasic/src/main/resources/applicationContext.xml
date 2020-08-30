@@ -3,8 +3,15 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+	
+	<!-- 開啟AspectJ的自動代理功能 -->
+	<aop:aspectj-autoproxy/>
 	
 	<!-- spring創建bean的技術用的是映射，所以必須要有無參數的建構子 -->
 	
@@ -15,6 +22,27 @@
 	<bean id="firstBean" class="idv.jay.spring.model.Person">
 		<property name="id" value="1"/>
 		<property name="name" value="jay"/>
+	</bean>
+	
+	<!-- Spring 載入配置文件properties方式1
+		通過spring框架的PropertyPlaceholderConfigurer.class載入
+		location: 配置文件的位置
+	 -->
+<!-- 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
+<!-- 		<property name="location" value="oracle.properties"/> -->
+<!-- 	</bean> -->
+	
+	<!-- Spring專門提供的引入配置文件標籤
+		需開啟namespace: context
+	 -->
+	<context:property-placeholder location="oracle.properties"/>
+	
+	<!-- c3p0連線池 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}"/>
+		<property name="jdbcUrl" value="${jdbc.url}"/>
+		<property name="user" value="${jdbc.user}"/>
+		<property name="password" value="${jdbc.password}"/>
 	</bean>
 	
 	<bean id="s1" class="idv.jay.spring.model.Student">
@@ -142,4 +170,59 @@
 		
 	<!-- bean的生命週期 -->
 	<bean id="lifeCycle" class="idv.jay.lifeCycle.LifeCycle" init-method="init" destroy-method="destroy" p:di="屬性注入" />
+	
+	<!-- spring後置處理器註冊，需註冊才會對所有bean作用 -->
+	<bean class="idv.jay.afterHandler.AfterHandler"/>
+	
+	<!-- 測試自動裝配配置Start
+	autowire: 自動裝配屬性
+		byName: 找尋bean中有id跟屬性同名進行自動裝配
+		byType: 找尋bean中可以為這個型別的屬性賦值的bean,子類別或實作類別均可賦值
+	 -->
+	<bean id="emp" class="idv.jay.spring.model.Emp" autowire="byType">
+		<property name="eid" value="7001"/>
+		<property name="ename" value="jay"/>
+<!-- 		<property name="car" ref="car"/> -->
+<!-- 		<property name="dept" ref="dept"/> -->
+	</bean>
+	
+	<bean id="car" class="idv.jay.spring.model.Car">
+		<property name="cid" value="8001"/>
+		<property name="cname" value="audi"/>
+	</bean>
+	
+	<bean id="dept" class="idv.jay.spring.model.Dept">
+		<property name="did" value="9001"/>
+		<property name="dname" value="c9"/>
+	</bean>
+	<!-- 測試自動裝配配置End -->
+	
+	<!-- 測試註解配置bean
+	<context:component-scan base-package=""> : 掃描零件
+	
+	<context:include-filter>: 在指定的package下，再次通過註解或類型更具體的指定要掃描包含的一個或多個class
+	注意: 在使用include時，必須設置 use-default-filters="false"，將預設的filter (及掃瞄package下的所有class) 關閉
+	
+	<context:exclude-filter>: 在指定的package下，再次通過註解或類型更具體的指定要排除的一個或多個class
+	注意: 在使用include時，必須設置 use-default-filters="false"，將預設的filter (及掃瞄package下的所有class) 開啟
+	 -->
+	<context:component-scan base-package="idv.jay.*" use-default-filters="true">
+<!-- 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/> -->
+<!-- 		<context:include-filter type="assignable" expression="idv.jay.EmpModel.EmpService.EmpServiceImpl"/> -->
+<!-- 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/> -->
+<!-- 		<context:exclude-filter type="assignable" expression="idv.jay.EmpModel.EmpDao.EmpDaoImpl"/> -->
+	</context:component-scan>
+	
+<!-- 	<context:component-scan base-package="idv.jay.aspect"/> -->
+	
+	<!-- spring原生 aop 配置 -->
+	<aop:config>
+		<!-- 定義切面的class -->
+		<aop:aspect ref="springAspect">
+			<aop:pointcut expression="execution(public void idv.jay.proxy.*.*(..))" id="cut"/>
+			<!-- 定義通知 -->
+<!-- 			<aop:before method="before" pointcut="execution(public void idv.jay.proxy.*.*(..))"/> -->
+			<aop:before method="before" pointcut-ref="cut"/>
+		</aop:aspect>
+	</aop:config>
 </beans>

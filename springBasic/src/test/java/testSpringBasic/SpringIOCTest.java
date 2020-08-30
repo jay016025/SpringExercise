@@ -1,15 +1,32 @@
 package testSpringBasic;
 
+import java.sql.SQLException;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+import idv.jay.EmpModel.EmpController.EmpController;
 import idv.jay.lifeCycle.LifeCycle;
+import idv.jay.spring.model.Emp;
 import idv.jay.spring.model.Person;
 import idv.jay.spring.model.Student;
 import idv.jay.spring.model.Teacher;
 
 public class SpringIOCTest {
+	
+	private ApplicationContext context;
+	
+	@BeforeEach
+	public void setup() {
+//		初始化容器
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+	}
+	
 	
 	@Test
 	public void testJunit() {
@@ -20,8 +37,6 @@ public class SpringIOCTest {
 	
 	@Test
 	public void testBean() {
-//		初始化容器
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 //		透過beanId取得物件
 //		Person mo = (Person) context.getBean("firstBean");
 		
@@ -40,7 +55,6 @@ public class SpringIOCTest {
 	
 	@Test
 	public void testFactoryBean() {
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Object obj = context.getBean("studentFactory");
 		//工廠bean特點:這裡取得的物件應該為工廠，但是實際上為工廠所創建的物件
 		System.out.println(obj);
@@ -52,5 +66,29 @@ public class SpringIOCTest {
 		LifeCycle msg = context.getBean("lifeCycle", LifeCycle.class);
 		System.out.println(msg);
 		context.close();
+	}
+	
+	@Test
+	public void testDataSource() throws SQLException {
+		ComboPooledDataSource dataSource = context.getBean("dataSource", ComboPooledDataSource.class);
+		System.out.println(dataSource.getConnection());
+	}
+	
+	@Test
+	public void testEmpAutoWrite() {
+		
+		Emp emp = context.getBean("emp", Emp.class);
+		System.out.println(emp);
+	}
+	
+	@Test
+	public void testAnnotation() {
+		System.out.println(this.context);
+	}
+	
+	@Test
+	public void testController() {
+		EmpController controller = context.getBean("empController", EmpController.class);
+		controller.addEmp();
 	}
 }
